@@ -1,4 +1,7 @@
 # FFT(Fast Fourier Transform)
+
+<img src="images/FFT.png" width="60%">
+
 FFT converts a signal from the time domain (時間領域) to the **frequency domain (周波数領域)**.
 - Inputs: x0 to x7 (8 samples), taken at different times, separated by the sampling period(0, 1T, 2T, 3T...)
 - Outputs: X0 to X7 (8 frequency bins, 0Hz, 125, 250, 375, 500, -375, -250, -125)
