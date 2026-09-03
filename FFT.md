@@ -60,6 +60,45 @@ The FFT may show a strong peak at 300 Hz instead of 700 Hz.
 
 This phenomenon is called **aliasing**.
 
+### What if Fs​ = 2Fmax
+In theory, a frequency equal to Fs​/2 can still be represented, but in practice it is a problematic edge case.
+Example:
+Suppose:
+
+Fmax​=500 Hz and Fs​=1000 Hz
+
+Then the signal period is: T ​= 2 ms and the sampling period is: Ts ​= 1 ms
+
+You get exactly 2 samples per cycle.
+
+Take a sine wave: x(t) = sin(2π⋅500t)
+
+Sample it at 1000 Hz: x[n] = sin(2π⋅500⋅n/1000​) = sin(πn)
+
+Since sin(πn)=0
+
+for every integer n, the sampled sequence becomes:
+```
+0, 0, 0, 0, 0, ...
+```
+The 500 Hz signal has completely disappeared!
+
+
+Suppose the same 500 Hz signal has a phase shift:
+
+x(t) = cos(2π⋅500t)
+
+Now: x[n] = cos(πn)
+
+which becomes:
+```
+1, -1, 1, -1, 1, -1, ...
+```
+Here the 500 Hz signal is visible.
+
+So at the Nyquist frequency, the sampled result **depends heavily on phase**.
+
+This is why engineers prefer Fs > 2Fmax.​
 
 ### In practice
 
