@@ -54,7 +54,7 @@ Falias = ∣Fs ​− Fsignal​∣
 ```
 The FFT may show a strong peak **at 300 Hz** instead of 700 Hz.
 
-This phenomenon is called **aliasing**.
+This phenomenon is called **aliasing (エイリアシング)**.
 
 ### What if Fs​ = 2Fmax
 In theory, a frequency equal to Fs​/2 can still be represented, but in practice it is a problematic edge case.
