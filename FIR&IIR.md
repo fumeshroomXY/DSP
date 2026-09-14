@@ -183,6 +183,23 @@ controls high-frequency behavior
 ```
 If something looks wrong, you inspect the responsible stage instead of the entire filter.
 
+### Easier implementation
+You can build one reusable block and and connect several together:
+```
+Input
+ |
+[Biquad]
+ |
+[Biquad]
+ |
+[Biquad]
+ |
+[Biquad]
+ |
+Output
+```
+Much easier than creating a different circuit for each filter order.
+
 ### Intuitive analogy
 Imagine you're building a staircase to the 8th floor.
 
