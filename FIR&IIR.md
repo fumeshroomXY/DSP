@@ -24,7 +24,7 @@ Notice that the output depends **only on current and past input samples**.
 - Higher computational cost for sharp frequency responses
 
 # IIR (Infinite Impulse Response)
-An IIR filter's impulse response theoretically continues forever.
+An IIR filter's impulse response **theoretically continues forever**.
 
 Example
 ```
@@ -84,13 +84,16 @@ A biquad is a **2nd-order filter section**:
 Most practical IIR filters are implemented by **cascading multiple biquads**.
 
 For example:
-```
-Single biquad(2nd-order filter): $H(z)=H_1(z)$
 
-Two biquads(4th-order filter): $H(z)=H_1(z)H_2(z)$
 
-Four biquads(8th-order filter): $H(z)=H_1(z)H_2(z)H_3(z)H_4(z)$
-```
+Single biquad (2nd-order filter): $H(z)=H_1(z)$
+
+Two biquads (4th-order filter): $H(z)=H_1(z)H_2(z)$
+
+Four biquads (8th-order filter): $H(z)=H_1(z)H_2(z)H_3(z)H_4(z)$
+
+
+
 A biquad is often implemented as:
 
 $y[n] = b_0x[n] + b_1x[n-1] + b_2x[n-2] - a_1y[n-1] - a_2y[n-2]$
@@ -235,6 +238,8 @@ A high-order IIR filter is often broken into several lower-order filters connect
 $H(z)=H_1(z)H_2(z)H_3(z)\cdots$
 
 Each $H_i(z)$ is called a stage.
+
+<img src="images/IIRBiquad.png" width="80%">
 
 For example, a 6th-order IIR filter might be implemented as:
 
