@@ -167,3 +167,30 @@ It contains:
 - Phase $\phi(f)$. Where that sinusoid is shifted in time.
 
 When people look at a spectrum, they are often looking at: $|X(f)|$ which shows only the strength.
+
+
+## Connect $x(t)$ with detector
+Suppose the signal is $x(t)=\cos(2\pi100t)$
+
+and the "detector" is $e^{-j2\pi100t} = \cos(2\pi100t)-j\sin(2\pi100t)$.
+
+Multiply the signal and detector: $x(t)e^{-j2\pi100t} = \cos(2\pi100t)e^{-j2\pi100t}$
+
+Replace the cosine with exponentials: $\cos(2\pi100t) = \frac{ e^{j2\pi100t} + e^{-j2\pi100t} }{2}$​
+
+Therefore $x(t)e^{-j2\pi100t} = \frac12 \left( e^{j2\pi100t} + e^{-j2\pi100t} \right) e^{-j2\pi100t} = \frac12 \left( 1+e^{-j2\pi200t} \right)$
+
+Notice what happened:
+
+- One term became constant (DC): $\frac12$​
+- The other became a 200 Hz oscillation: $\frac12 e^{-j2\pi200t}$
+
+If you now integrate (or average) over a long time: $\int e^{-j2\pi200t}dt \approx 0$
+
+because positive and negative rotations cancel out.
+
+Only the DC term survives: $\int \frac12dt$
+
+This produces a large nonzero result.
+
+This is why the detector says: "Yes, I found a 100 Hz component!"
