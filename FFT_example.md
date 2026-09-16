@@ -40,6 +40,9 @@ Many terms used in the DFT are identical.
 FFT exploits these symmetries instead of recomputing them.
 
 # Example: 8-point FFT
+
+<img src="images/FFTdiagram.png" width="80%">
+
 We'll use the simplest possible signal: $x[n] = [1,1,1,1,0,0,0,0]$
 
 The goal is to compute the 8-point DFT: $X[k]=\sum_{n=0}^{7} x[n]W_8^{kn}$​ where $W_8=e^{-j2\pi/8}$
