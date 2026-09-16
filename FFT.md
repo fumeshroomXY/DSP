@@ -8,7 +8,7 @@ FFT converts a signal from the time domain (時間領域) to the **frequency dom
 - Inputs: x0 to x7 (8 samples), taken at different times, separated by the sampling period(0, 1T, 2T, 3T...)
 - Outputs: X0 to X7 (8 frequency bins, 0Hz, 125, 250, 375, 500, -375, -250, -125)
 - Processing stages: 3 stages (log₂(8) = 3)
-- FFT point count: The number of FFT points must be a power of 2.
+- FFT point count: The number of FFT points must be **a power of 2**.
 
 ## Frequency resolution
 ```
@@ -119,8 +119,7 @@ Fmax ​= 500Hz
 
 
 ## Why only half the FFT output is used?
-For a real signal: x[n]
-the FFT output is symmetric:
+For a real signal, the FFT output is symmetric:
 ```
 Positive frequencies: 0 Hz ----> Fs/2
 Negative frequencies: -Fs/2 ----> 0 Hz
