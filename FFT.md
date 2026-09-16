@@ -1,5 +1,7 @@
 # FFT(Fast Fourier Transform)
 
+FFT (Fast Fourier Transform) is just a **faster** way to calculate the DFT.
+
 <img src="images/FFT.png" width="60%">
 
 FFT converts a signal from the time domain (時間領域) to the **frequency domain (周波数領域)**.
