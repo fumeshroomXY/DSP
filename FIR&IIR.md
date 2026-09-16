@@ -13,6 +13,8 @@ The response ends after 4 samples → Finite.
 ```
 Notice that the output depends **only on current and past input samples**.
 
+<img src="images/FIRfilter.png" width="30%">
+
 #### Advantages
 
 - Always stable (if coefficients are finite)
@@ -43,6 +45,8 @@ Notice the output depends on:
 - **past outputs**
 
 This feedback is the key difference.
+
+<img src="images/IIRfilter.png" width="30%">
 
 #### Advantages
 - Achieves sharp filtering with fewer coefficients
