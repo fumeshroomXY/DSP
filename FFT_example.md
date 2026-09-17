@@ -301,3 +301,13 @@ Each power corresponds to a different rotation:
 
 So before combining the odd branch, FFT rotates it by the required angle.
 
+Instead of calculating these factors every time, the FFT library stores them in a lookup table:
+```
+twiddles -> {
+    W8^0,
+    W8^1,
+    W8^2,
+    ...
+}
+```
+This greatly speeds up the FFT.
