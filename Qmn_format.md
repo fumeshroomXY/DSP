@@ -1,3 +1,5 @@
+<img src="images/single_pole_iir_filter.png" width="60%">
+
 # Fixed-point number formats
 Q1.31 and Q2.62 are fixed-point number formats. The notation is: $Qm.n$
 
@@ -31,13 +33,17 @@ Approximately: $-1 \le x \le 0.9999999995$
 
 For example: $0.5 = 2^{-1}$
 
+$\text{real value}=\frac{\text{stored integer}}{2^{31}}$​
+
 so its binary form is
-```
-0.1000000000000000000000000000000
-```
-which becomes:
+
 ```
 01000000000000000000000000000000
+```
+
+the real value becomes:
+```
+0.1000000000000000000000000000000
 ```
 
 ### Why DSP engineers like Q1.31
@@ -91,6 +97,25 @@ Therefore DSP implementations usually:
 - **Saturate** if necessary
 - Store as Q1.31
 
+### How to convert back to Q1.31?
+**Right shift by 31 bits**.
+
+Suppose the 64-bit integer is $N$.
+
+After arithmetic right-shift by 31: $N' = N >> 31$
+
+The new value is: $N' \approx \frac{N}{2^{31}}$​
+
+(the fractional part is discarded because of integer truncation).
+
+Now interpret $N'$ as a **Q1.31** number: $\text{real value after conversion} = \frac{N'}{2^{31}}$
+
+Substituting: $\frac{N/2^{31}}{2^{31}} = \frac{N}{2^{62}}$​
+
+which is exactly the original real value.
+
+So the purpose of the shift is **not to change the real-world value**, but to **change the Q format**.
+
 # Saturation
 Saturation prevents the result from exceeding the range that can be represented by the output format.
 
@@ -136,3 +161,75 @@ The saturation block typically performs:
 <img src="images/saturate.png" width="70%">
 
 So any value outside the Q1.31 range is **clipped to the nearest representable limit** rather than allowed to overflow and wrap around.
+
+# Rounding
+When two Q1.31 numbers are multiplied: $Q1.31 \times Q1.31 \rightarrow Q2.62$
+
+Example:
+```
+0.7 × 0.7 = 0.49
+```
+Internally, the DSP stores the result with 62 fractional bits:
+```
+0.490000000000...
+```
+But eventually the filter output must return to Q1.31 format, which only has 31 fractional bits.
+
+So the DSP must **discard** 31 bits.
+
+## Without rounding (truncation)
+Suppose the true value is:
+```
+1.23456789
+```
+If only a few decimal places are kept:
+```
+1.2345
+```
+The extra digits are simply thrown away.
+
+This is called **truncation** (cutting off).
+
+The result is always slightly smaller than the true value.
+
+## With rounding
+Instead of simply throwing away the bits, the DSP checks the first discarded bit:
+```
+1.23456 → 1.2346
+1.23454 → 1.2345
+```
+In binary:
+```
+Kept bits  Discarded bits
+10110011 | 100101...
+```
+Because the first discarded bit is 1, the DSP rounds up:
+```
+10110100
+```
+instead of
+```
+10110011
+```
+
+## Why this matters in IIR filters
+An IIR filter performs millions of multiply-accumulate operations:
+
+$y[n] = b_0x[n]+b_1x[n-1]+b_2x[n-2] -a_1y[n-1]-a_2y[n-2]$
+
+Each multiplication produces a high-precision result (for example Q2.62).
+
+If every result is truncated:
+```
+small error
+   ↓
+feedback
+   ↓
+more error
+   ↓
+accumulates
+```
+The error can accumulate because previous outputs are fed back into future calculations.
+
+Using rounding makes **the quantization error much smaller and more unbiased**.
+
