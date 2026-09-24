@@ -5,8 +5,8 @@ FFT (Fast Fourier Transform) is just a **faster** way to calculate the DFT.
 <img src="images/FFT.png" width="60%">
 
 FFT converts a signal from the time domain (時間領域) to the **frequency domain (周波数領域)**.
-- Inputs: x0 to x7 (8 samples), taken at different times, separated by the sampling period(0, 1T, 2T, 3T...)
-- Outputs: X0 to X7 (8 frequency bins, 0Hz, 125, 250, 375, 500, -375, -250, -125)
+- Inputs: $x_0$ to $x_7$ (8 samples), taken at different times, separated by the sampling period(0, 1T, 2T, 3T...)
+- Outputs: $X_0$ to $X_7$ (8 frequency bins, 0Hz, 125, 250, 375, 500, -375, -250, -125)
 - Processing stages: 3 stages (log₂(8) = 3)
 - FFT point count: The number of FFT points must be **a power of 2**.
 
@@ -14,8 +14,8 @@ FFT converts a signal from the time domain (時間領域) to the **frequency dom
 ```
 Frequency Resolution = Fs / N
 ```
-- Fs​ = Sampling frequency
-- N = FFT point count
+- $F_s$​ = Sampling frequency
+- $N$ = FFT point count
 
 Example:
 ```
@@ -32,9 +32,9 @@ resolution = 1000 / 1024 = 0.97Hz
 | X.  | ... Hz   |
 
 ## Nyquist-Shannon Sampling Theorem
-It states: Fs > 2 * Fmax​
-- Fs​ = sampling frequency
-- Fmax​ = highest frequency component in the signal
+It states: $F_s$ > $2 * F_{max}$​
+- $F_s$​ = sampling frequency
+- $F_{max}​$ = highest frequency component in the signal
 
 To reconstruct or correctly analyze a signal, the sampling frequency must be **greater than twice** the highest frequency contained in the signal.
 
@@ -58,8 +58,8 @@ The FFT may show a strong peak **at 300 Hz** instead of 700 Hz.
 
 This phenomenon is called **aliasing (エイリアシング)**.
 
-### What if Fs​ = 2Fmax
-In theory, a frequency equal to Fs​/2 can still be represented, but in practice it is a problematic edge case.
+### What if $F_s​=2F_{max}$
+In theory, a frequency equal to $\frac{F_s​}{2}$ can still be represented, but in practice it is a problematic edge case.
 
 Example:
 ```
@@ -70,11 +70,11 @@ the sampling period is: Ts ​= 1 ms
 ```
 You get exactly 2 samples per cycle.
 
-Take a sine wave: x(t) = sin(2π⋅500t)
+Take a sine wave: $x(t)=sin(2π⋅500t)$
 
-Sample it at 1000 Hz: x[n] = sin(2π⋅500⋅n/1000​) = sin(πn)
+Sample it at 1000 Hz: $x[n]=sin(2π⋅500⋅n/1000​)=sin(πn)$
 
-Since sin(πn) = 0, for every integer n, the sampled sequence becomes:
+Since $sin(πn)=0$, for every integer $n$, the sampled sequence becomes:
 ```
 0, 0, 0, 0, 0, ...
 ```
@@ -83,9 +83,9 @@ The 500 Hz signal has **completely disappeared!**
 
 Suppose the same 500 Hz signal has a phase shift:
 
-x(t) = cos(2π⋅500t)
+$x(t)=cos(2π⋅500t)$
 
-Now: x[n] = cos(πn), which becomes:
+Now: $x[n]=cos(πn)$, which becomes:
 ```
 1, -1, 1, -1, 1, -1, ...
 ```
@@ -93,15 +93,15 @@ Here the 500 Hz signal is visible.
 
 So at the Nyquist frequency, the sampled result **depends heavily on phase**.
 
-This is why engineers prefer Fs > 2Fmax.​
+This is why engineers prefer $F_s > 2F_{max}$.​
 
 ### In practice
 
-Engineers rarely sample at exactly 2Fmax​.
+Engineers rarely sample at exactly $2F_{max}$​.
 
 Instead they use a margin:
 
-Fs = 2.5Fmax​ or 5Fmax​ or higher.
+$F_s = 2.5F_{max}$​ or $5F_{max}$​ or higher.
 
 Reasons:
 - Easier anti-aliasing filter design
@@ -110,12 +110,12 @@ Reasons:
 
 
 ## Upper frequency limit
-For real-valued input signals, the highest useful frequency is: Fs / 2 (Nyquist frequency)​. 
+For real-valued input signals, the highest useful frequency is: $\frac{F_s}{2}$ (Nyquist frequency)​. 
 
 Example:
-Fs = 1000 Hz
+$F_s=1000Hz$
 
-Fmax ​= 500Hz
+$F_{max}=500Hz$
 
 
 ## Why only half the FFT output is used?
@@ -126,8 +126,8 @@ Negative frequencies: -Fs/2 ----> 0 Hz
 ```
 Therefore:
 
-- X0 ~ X511 contain unique information
-- X512 ~ X1023 are mirror images
+- $X_0$ ~ $X_{511}$ contain unique information
+- $X_{512}$ ~ $X_{1023}$ are mirror images
 
 So with a 1024-point FFT, we typically analyze only the **first 512 bins**.
 
@@ -139,7 +139,7 @@ Sampling frequency Fs ​= 1000 Hz
 FFT points N = 1024
 Sample period Ts = 1ms
 ```
-To collect 1024 samples, the required time is: N × Ts​ = 1.024s
+To collect 1024 samples, the required time is: $N×T_s​=1.024s$
 
 So you need **1.024 seconds** of signal data before you can perform a 1024-point FFT.
 
