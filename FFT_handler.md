@@ -39,6 +39,63 @@ Common options may include:
 - Scaling enabled/disabled
 - Window enabled/disabled
 
+## Scaling
+In a radix-2 FFT, each butterfly performs additions:
+
+$a+b,\quad a-b$
+
+The addition can increase the magnitude by up to 2×.
+
+For an N-point FFT: $\log_2(N)$ stages are required.
+
+If you don't scale, the internal values can grow by approximately: $N$ times.
+
+For example, an 8-point FFT:
+
+- stage1: potentially ×2
+- stage2: potentially ×2
+- stage3: potentially ×2
+
+Total worst-case growth: $2^3 = 8$
+
+<img src="images/fft_scaling.png" width="100%">
+
+The slide means:
+- after stage1 → divide by 2
+- after stage2 → divide by 2
+- after stage3 → divide by 2
+
+Total scaling: $\frac12 \times \frac12 \times \frac12 = \frac18$
+
+which exactly compensates for the worst-case growth of an 8-point FFT.
+
+So **overflow is very unlikely**.
+
+### Why less scaling is better for small signals?
+Because fixed-point arithmetic has finite resolution.
+
+Consider a 16-bit FFT. Suppose your input amplitude is only: $100$ LSBs.
+
+With *R_FFT_OPT_SCALE*:
+```
+100 -> 50 -> 25 -> 12
+```
+After several stages, lots of low bits disappear due to rounding/truncation.
+
+The FFT starts **losing precision**.
+
+With *R_FFT_OPT_SCALE_X2*:
+```
+100 -> 100 -> 50 -> 50
+```
+Values remain larger internally.
+
+Therefore:
+
+- fewer quantization errors
+- stronger FFT peaks
+- better detection of weak tones
+
 # twiddles
 ```c
 void *twiddles;
