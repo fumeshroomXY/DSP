@@ -24,7 +24,24 @@ Example:
 - ...
 - $k=4$: Nyquist frequency
 
+For a real-valued input signal $x[n]$, the FFT output satisfies **Hermitian (conjugate) symmetry**:
 
+$X[k] = X^*[N-k]$
+
+For the special bins:
+
+- $k=0$ (DC)
+- $k=N/2$ (Nyquist, only when $N$ is even)
+
+Therefore,  $X[N/2] = X^*[N/2]$
+
+and the only complex number equal to its own conjugate is **a purely real number**:
+
+$Im(X[N/2])=0$
+
+So in a mathematically exact FFT of a real sequence:
+
+$X[0] \in \mathbb{R}, X[N/2] \in \mathbb{R}$
 ## How the DFT works
 
 Recall the **"frequency detector"** in the Fourier Transform.
