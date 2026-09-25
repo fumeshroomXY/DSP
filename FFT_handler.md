@@ -201,3 +201,176 @@ where $w[n]$ could be:
 - Blackman window
 - Kaiser window
 
+## Why do we need a window?
+FFT assumes that the input block **repeats forever**.
+```
+One frame: x[0] ... x[1023]
+```
+
+For example, if you take 1024 samples of a sine wave and feed them directly to the FFT, the FFT internally treats the signal like this:
+```
+[one FFT frame][same frame][same frame]...
+　　　　　　　　　　↓
+x[0] ... x[1023] x[0] ... x[1023] x[0] ...
+```
+
+So the FFT implicitly connects:
+```
+x[1023] --> x[0]
+```
+
+### Example 1: Integer number of cycles
+
+Suppose Fs = 1024 Hz and your signal is exactly 32 Hz.
+
+Then in 1024 samples you get exactly 32 cycles. The first and last samples line up nicely.
+
+There is almost **no jump**. This is the ideal case.
+
+### Example 2: Non-bin-centered frequency
+
+Now suppose the frequency is 32.5 Hz.
+
+Inside the 1024-sample frame: The signal stops in the middle of a cycle.
+
+So the repeated signal contains **a sudden discontinuity**.
+
+### Why does a discontinuity cause leakage?
+
+A sudden jump requires many frequency components to describe.
+
+Think of a square wave:
+```
+____|‾‾‾‾
+```
+A square wave contains lots of harmonics.
+
+Similarly, the artificial jump between $x[1023]$ and $x[0]$ creates extra spectral content.
+
+The FFT interprets that jump as real signal energy and spreads energy into neighboring bins.
+
+This is **spectral leakage**.
+
+For $N=1024$:
+
+- Bin 0 = DC
+- Bin 1 = 1 cycle in 1024 samples
+- Bin 2 = 2 cycles in 1024 samples
+- ...
+- Bin 100 = 100 cycles in 1024 samples
+
+Every frequency detector completes an integer number of cycles inside the frame.
+
+Example, bin 3:
+```
+|<---- 1024 samples ---->|
+~~~ cycle 1 ~~~
+~~~ cycle 2 ~~~
+~~~ cycle 3 ~~~
+```
+The start and end connect perfectly.
+
+Now suppose your signal is 3.25 cycles over the frame.
+
+There is no frequency detector corresponding to 3.25 cycles, it only has 3 cycles and 4 cycles available. 
+
+So the FFT expresses the signal as a combination:
+
+```
+3-bin + 4-bin + 5-bin + ...
+```
+which appears as spectral leakage.
+
+<img src="images/fft_window.png" width="100%">
+
+## What does the window do?
+The slide uses a Hanning (Hann) window.
+
+A Hann window gradually reduces the amplitude to nearly zero at both ends.
+
+The start and end become small, so when FFT assumes repetition, **the discontinuity is much less noticeable**.
+
+## What problem does it solve?
+It reduces spectral leakage (スペクトルリーケージ).
+
+Suppose the signal contains:
+
+- 30 Hz sine wave at 0 dB
+- 40 Hz sine wave at -28 dB
+
+### Without windowing
+The strong 30 Hz tone leaks energy into neighboring bins. 
+
+The "skirts" (裾, suso) become wide.
+
+The small -28 dB tone can be hidden under those skirts.
+
+### With windowing
+The side lobes are greatly reduced. The main lobe widened a little.
+
+Now the weak 40 Hz component becomes visible.
+
+The red arrow in the bottom-right FFT plot points to the weaker spectral component that becomes easier to detect.
+
+## Trade-off
+Windowing is **not free**. Windowing **does** affect frequency detection.
+
+Suppose your signal is: $x[n]$ and you apply a Hann window: $w[n]$
+
+The FFT sees: $x_w[n] = x[n]w[n]$, not the original signal. So you have definitely modified the signal.
+
+A fundamental Fourier property is: 
+
+$x[n]w[n]$ in the time domain corresponds to $X(f) * W(f)$ in the frequency domain.
+
+The $*$ means **convolution**.
+
+In words: Multiplying by a window **smears** the spectrum with the spectrum of the window.
+
+So windowing itself introduces **distortion**.
+
+### What exactly gets worse?
+
+A Hann window causes:
+
+#### Reduced amplitude
+
+A pure tone's FFT magnitude becomes smaller.
+
+For Hann: $\text{coherent gain} \approx 0.5$
+
+which is why many FFT tools compensate for window gain.
+
+#### Wider main lobe
+
+Two close frequencies become harder to separate.
+
+Example:
+```
+30 Hz
+31 Hz
+```
+The peaks widen and may merge.
+
+Frequency resolution decreases slightly.
+
+So Windowing does **not preserve** the spectrum perfectly.
+
+It deliberately trades:
+
+- Less leakage ✅
+- Better weak-tone detection ✅
+
+for
+
+- Wider peaks
+- Some amplitude error
+- Slightly worse frequency resolution
+
+| No Window                        | Hann Window                         |
+| -------------------------------- | ----------------------------------- |
+| Better frequency resolution      | Slightly worse frequency resolution |
+| More spectral leakage            | Much less leakage                   |
+| Strong tones can mask weak tones | Weak tones easier to see            |
+
+In FFT analysis, reducing leakage is usually worth the slight loss in resolution.
