@@ -18,11 +18,11 @@ Each corresponds to $f_k = \frac{k}{N}f_s$​ where $f_s$​ is the **sampling f
 
 Example:
 
-- $k=0$: DC (constant signal)
-- $k=1$: one cycle in the observation window
-- $k=2$: two cycles
+- $k=0$, Bin 0: DC (constant signal)
+- $k=1$, Bin 1: 1 cycle in $N$ samples
+- $k=2$, Bin 2: 2 cycles in $N$ samples
 - ...
-- $k=4$: Nyquist frequency
+- $k=4$, Bin 4: Nyquist frequency
 
 For a real-valued input signal $x[n]$, the FFT output satisfies **Hermitian (conjugate) symmetry**:
 
