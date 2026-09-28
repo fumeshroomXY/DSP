@@ -22,9 +22,7 @@ Continuous-time Fourier Transform: $X(f)=\int_{-\infty}^{\infty} x(t)e^{-j2\pi f
 Suppose you have a signal: $x(t)$ and you want to know:
 
 - "How much 100 Hz is inside?"
-
 - "How much 200 Hz is inside?"
-
 - "How much 1000 Hz is inside?"
 
 The Fourier Transform checks **one frequency at a time**.
@@ -63,9 +61,7 @@ The integral $X(f) = \int x(t)e^{-j2\pi ft}dt$ answers how well $x(t)$ matches f
 #### Why not look at one instant?
 Imagine the signal $x(t)=\cos(2\pi 100t)$
 
-At one particular time: $t=0.001$
-
-the value might be $0.81$
+At one particular time: $t=0.001$, the value might be $0.81$
 
 **That single value tells you almost nothing about whether the signal contains 100 Hz**.
 
