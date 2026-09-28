@@ -35,9 +35,7 @@ For the special bins:
 
 Therefore,  $X[N/2] = X^*[N/2]$
 
-and the only complex number equal to its own conjugate is **a purely real number**:
-
-$Im(X[N/2])=0$
+and the only complex number equal to its own conjugate is **a purely real number**: $Im(X[N/2])=0$
 
 So in a mathematically exact FFT of a real sequence:
 
